@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "docs": {
+      "command": "npx",
+      "args": ["-y", "pkg"]
+    }
+  }
+}

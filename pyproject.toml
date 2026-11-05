@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp_config_validator"
+version = "0.1.0"
+description = "Validate Cursor MCP JSON configs"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "MOHAbdelkarim", email = "mohaabdelkarim2@gmail.com" },
+]
+keywords = ["mcp", "cursor", "json", "validator"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Environment :: Console",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+mcp_config_validator = "mcp_config_validator.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/mohabdelkarim/mcp_config_validator"
+Repository = "https://github.com/mohabdelkarim/mcp_config_validator"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
