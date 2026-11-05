@@ -3,7 +3,8 @@
 Rule ids (keep in sync with docs/index.html):
   invalid_json, root_type, missing_mcp_servers, mcp_servers_type,
   server_name, server_type, missing_transport, empty_command, command_type,
-  args_type, args_item_type, env_type, env_value_type, url_type, url_http
+  command_shell_string, args_type, args_item_type, env_type, env_value_type,
+  url_type, url_http
 """
 
 from __future__ import annotations
@@ -130,6 +131,16 @@ def _validate_server(name: str, server: Any) -> list[Finding]:
                     Severity.ERROR,
                     "empty_command",
                     f'{label}: "command" must be a non-empty string',
+                )
+            )
+        elif " " in command.strip() and "args" not in server:
+            findings.append(
+                Finding(
+                    Severity.ERROR,
+                    "command_shell_string",
+                    f'{label}: "command" looks like a full shell string; '
+                    'split into command + args '
+                    '(example: command "npx", args ["-y", "package"])',
                 )
             )
 

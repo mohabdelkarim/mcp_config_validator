@@ -52,6 +52,13 @@ def test_http_url_is_warning() -> None:
     assert any(f.code == "url_http" and f.severity == Severity.WARNING for f in findings)
 
 
+def test_command_shell_string_is_error() -> None:
+    findings = validate(_load("command_shell_string.json"))
+    assert any(
+        f.code == "command_shell_string" and f.severity == Severity.ERROR for f in findings
+    )
+
+
 def test_root_must_be_object() -> None:
     findings = validate(["not", "an", "object"])  # type: ignore[arg-type]
     assert "root_type" in _codes(findings)

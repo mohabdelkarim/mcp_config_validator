@@ -3,7 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MCP Config Validator</title>
+  <title>MCP Config Validator | Cursor mcp.json checker</title>
+  <meta name="description" content="Free Cursor MCP config validator. Catch broken mcpServers JSON: bad args, shell-string commands, empty command, env types, before you restart the IDE.">
+  <meta name="keywords" content="Cursor, MCP, mcp.json, mcpServers, Model Context Protocol, validator, JSON">
+  <meta property="og:title" content="MCP Config Validator">
+  <meta property="og:description" content="Catch broken Cursor mcp.json configs before you restart the IDE.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mohabdelkarim.github.io/mcp_config_validator/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="MCP Config Validator">
+  <meta name="twitter:description" content="Free Cursor MCP mcp.json validator for mcpServers mistakes.">
   <style>
     :root {
       --bg: #0f1419;
@@ -139,10 +148,14 @@
       Rule ids (keep in sync with src/mcp_config_validator/validate.py):
       invalid_json, root_type, missing_mcp_servers, mcp_servers_type,
       server_name, server_type, missing_transport, empty_command, command_type,
-      args_type, args_item_type, env_type, env_value_type, url_type, url_http
+      command_shell_string, args_type, args_item_type, env_type, env_value_type,
+      url_type, url_http
     */
     const SAMPLE = `{
   "mcpServers": {
+    "filesystem": {
+      "command": "npx -y @modelcontextprotocol/server-filesystem /tmp"
+    },
     "browser": {
       "command": "npx",
       "args": "-y some-package"
@@ -199,6 +212,8 @@
           findings.push(finding("ERROR", "command_type", `${label}: "command" must be a string (got ${typeName(command)})`));
         } else if (!command.trim()) {
           findings.push(finding("ERROR", "empty_command", `${label}: "command" must be a non-empty string`));
+        } else if (command.trim().includes(" ") && !Object.prototype.hasOwnProperty.call(server, "args")) {
+          findings.push(finding("ERROR", "command_shell_string", `${label}: "command" looks like a full shell string; split into command + args (example: command "npx", args ["-y", "package"])`));
         }
         if (Object.prototype.hasOwnProperty.call(server, "args")) {
           const args = server.args;
